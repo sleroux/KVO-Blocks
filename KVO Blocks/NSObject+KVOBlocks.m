@@ -11,11 +11,10 @@
 
 @implementation NSObject (KVOBlocks)
 
-- (void)addObserver:(NSObject *)observer
-         forKeyPath:(NSString *)keyPath
-            options:(NSKeyValueObservingOptions)options
-            context:(void *)context
-          withBlock:(KVOBlock)block
+- (void)addObserverForKeyPath:(NSString *)keyPath
+                      options:(NSKeyValueObservingOptions)options
+                      context:(void *)context
+                    withBlock:(KVOBlock)block
 {
     objc_setAssociatedObject(self, (__bridge const void *)(keyPath), block, OBJC_ASSOCIATION_COPY);
     [self addObserver:self forKeyPath:keyPath options:options context:context];
@@ -30,8 +29,7 @@
     block(change, context);
 }
 
-- (void)removeBlockObserver:(NSObject *)observer
-                 forKeyPath:(NSString *)keyPath
+- (void)removeBlockObserverForKeyPath:(NSString *)keyPath
 {
     objc_setAssociatedObject(self, (__bridge const void *)(keyPath), nil, OBJC_ASSOCIATION_COPY);
     [self removeObserver:self forKeyPath:keyPath];
