@@ -31,3 +31,7 @@ Similarly, to remove the observer you can call as you normally would:
 ### Feedback
 
 If theres any questions or concerns, feel free to let me know - this is just small something I put together to help de-clutter my code so any suggestions are welcome!
+
+### License
+
+This software package is under MIT license.
