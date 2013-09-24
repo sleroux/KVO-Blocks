@@ -18,10 +18,12 @@
           withBlock:(KVOBlock)block
 {
     NSMutableDictionary *blocks = objc_getAssociatedObject(self, (__bridge const void *)(keyPath));
-    if (!blocks) blocks = [[NSMutableDictionary alloc] init];
+    if (!blocks) {
+        blocks = [[NSMutableDictionary alloc] init];
+        objc_setAssociatedObject(self, (__bridge const void *)(keyPath), blocks, OBJC_ASSOCIATION_RETAIN);
+        [self addObserver:self forKeyPath:keyPath options:options context:context];
+    }
     blocks[@([observer hash])] = [block copy];
-    objc_setAssociatedObject(self, (__bridge const void *)(keyPath), blocks, OBJC_ASSOCIATION_RETAIN);
-    [self addObserver:self forKeyPath:keyPath options:options context:context];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -40,7 +42,7 @@
 {
     NSMutableDictionary *blocks = objc_getAssociatedObject(self, (__bridge const void *)(keyPath));
     [blocks removeObjectForKey: @([observer hash])];
-    if ([blocks allKeys].count == 0) {
+    if (blocks && [blocks allKeys].count == 0) {
         objc_setAssociatedObject(self, (__bridge const void *)(keyPath), nil, OBJC_ASSOCIATION_COPY);
         [self removeObserver:self forKeyPath:keyPath];
     }
